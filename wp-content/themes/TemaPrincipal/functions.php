@@ -1,7 +1,7 @@
 <?php
 add_theme_support('post-thumbnails');
 
-function cadastro_Cursos(){
+function cadastroTreinamento(){
 	$singular = 'Treinamento';
 	$plural = 'Treinamentos';
 	$labels = array(
@@ -24,7 +24,7 @@ function cadastro_Cursos(){
 	);
 	register_post_type('Treinamento', $args);
 }
-add_action('init', 'cadastro_Cursos');
+add_action('init', 'cadastroTreinamento');
 function menu(){
 	register_nav_menu('header-menu','main-menu');	
 }
