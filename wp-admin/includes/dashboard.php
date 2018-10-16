@@ -267,7 +267,7 @@ function wp_dashboard_right_now() {
 		$num_posts = wp_count_posts( $post_type );
 		if ( $num_posts && $num_posts->publish ) {
 			if ( 'post' == $post_type ) {
-				$text = _n( '%s Treinamentos', '%s Treinamentos', $num_posts->publish );
+				$text = _n( '%s Post', '%s Posts', $num_posts->publish );
 			} else {
 				$text = _n( '%s Page', '%s Pages', $num_posts->publish );
 			}
