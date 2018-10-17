@@ -3,7 +3,16 @@
 Template Name: Formulario de Inscrição
 */
 ?>
-<?php get_header(); ?>
+<?php 
+    
+    if(!isset($_POST['post_id']) || empty($_POST['post_id']))
+    {
+        $location = get_site_url();
+        header("location:$location");
+        die();
+    }
+    get_header();
+?>
 <div class="container">
 	<form class="form-horizontal" method="post">
 		<div class="form-group">
