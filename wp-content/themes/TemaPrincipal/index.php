@@ -1,30 +1,37 @@
-
 <?php $css_especifico = 'index';
 	require_once('header.php');  ?>
 <main class="home-main">
 	<div class="container">
-		<h1>Ola, seja bem vindo</h1>
-		<ul class="cursos-listagem">
+		<table style="width:100%;">
+			<h1>Pagina Inicial</h1>
 			<?php 
 			$args = array(
 				'post_type' => 'treinamento'
 			);
-			$loop = new WP_Query($args); ?>
-			<?php if(have_posts()){
-				while(have_posts()){
-					the_post();
-			?>
-			<li class="cursos-listagem-item">
-				<a href="<?php the_permalink(); ?>">
+			$loop = new WP_Query($args);
+			//$contador = 0;
+			if($loop->have_posts()): ?>
+			<tr class="cursos-listagem">
+				<?php
+					while($loop->have_posts()):	$loop->the_post();
+				?>
+				<td class="cursos-listagem-item dados">
+					<a href="<?php the_permalink(); ?>">
 					<?php the_post_thumbnail(); ?>
-					<h3><?php the_title(); ?></h3>
-					<p><?php the_excerpt(); ?></p>
-				</a>
-			</li>
-			<?php
-				}
-			} ?>
-		</ul>
+					<h2><?php the_title(); ?></h2>
+					</a>
+				</td>
+				<?php
+						/*if ($contador%4 == 0) {
+							echo '</tr><tr class="cursos-listagem">';
+						}
+						else{
+							$contador++;
+						}*/
+					endwhile;
+				endif; ?>
+			</tr>
+		</table>
 	</div>
 </main>
 <?php get_footer(); ?>

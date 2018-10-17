@@ -1,8 +1,10 @@
 header .container,
-#menu-menu-principal {
+#menu-menu-paginas {
 	display: flex;
+	height: 50px;
 	align-items: center;
 	flex-wrap: wrap;
+	text-align:middle-center;
 }
 
 header {
@@ -15,6 +17,7 @@ header {
 
 .menu a {
 	text-decoration: none;
+	font-size:20px;
 	color: #FFF;
 	letter-spacing: .05rem;
 	font-weight: 300;
@@ -30,9 +33,3 @@ header .container {
 	padding: .5rem 0;
 }
 
-.menu-item-type-custom a {
-	height: 80px;
-	width: 150px;
-	text-indent: -9999px;
-	display: block;
-}
