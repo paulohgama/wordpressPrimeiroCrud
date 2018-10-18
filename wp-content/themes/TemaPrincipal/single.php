@@ -8,11 +8,11 @@
 	<center>
             <?php the_post_thumbnail(); ?>
             <h2><?php the_title(); ?></h2></center><br>
-	<div class="col-sm-8">
+	<div class="col-sm-10">
             <?php the_content(); ?>
 	</div>
 	<?php $curso_meta_data = get_post_meta($post->ID); ?>
-        <div class="col-sm-4">
+        <div class="col-sm-2">
             <dl>
                 <dd>Chamada: <?= date('d/m/Y',  strtotime($curso_meta_data['chamada_id'][0])) ?></dd>
                 <dd>Gratuito?

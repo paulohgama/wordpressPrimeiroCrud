@@ -3,18 +3,14 @@
 Template Name: Formulario de Inscrição
 */
 ?>
-<?php 
-    
-    if(!isset($_POST['post_id']) || empty($_POST['post_id']))
-    {
+<?php if(!isset($_POST['post_id']) || empty($_POST['post_id'])) {
         $location = get_site_url();
         header("location:$location");
         die();
-    }
-    get_header();
-?>
+    } get_header(); ?>
+
 <div class="container">
-	<form class="form-horizontal" method="post">
+    <form class="form-horizontal" action="" method="post">
 		<div class="form-group">
                     <label class="label-control col-sm-2" for="nome">Nome:</label>
                     <div class="col-sm-10">
@@ -81,9 +77,57 @@ Template Name: Formulario de Inscrição
                         <input id="celular" class="form-control" type="text" placeholder="Seu celular aqui" name="celular">
                     </div>
 		</div>
+                <input type="hidden" name="post_id" value="<?= $_POST['post_id']?>">
                 <div class="col-sm-offset-2 col-sm-10" style="margin-left: 180px">
-                    <button class="btn btn-success" type="submit">Enviar</button>
+                    <input class="btn btn-success" name="enviando" value="Enviar" type="submit"/>
                 </div>
 	</form>
 </div>
-<?php get_footer(); ?>
+
+<?php if(isset($_POST['enviando'])){
+        $celular = $_POST['celular'];
+        $telefone = $_POST['telefone'];
+        $estado = $_POST['estado'];
+        $cidade = $_POST['cidade'];
+        $bairro = $_POST['bairro'];
+        $cep = $_POST['cep'];
+        $cpf = $_POST['cpf'];
+        $email = $_POST['email'];
+        $post = $_POST['post_id'];
+        $nome = $_POST['nome'];
+        $endereco = $_POST['endereco'];
+        $data = $_POST['data'];
+        
+        global $wpdb;
+        $inscrito_table = $wpdb->prefix.'inscritos';
+        if($wpdb->insert(
+            $inscrito_table,
+            array(
+                'inscrito_nome' => $nome,
+                'inscrito_nascimento' => $data,
+                'inscrito_cpf' => $cpf,
+                'inscrito_cep' => $cep,
+                'inscrito_email' => $email,
+                'inscrito_cidade' => $cidade,
+                'inscrito_bairro' => $bairro,
+                'inscrito_estado' => $estado,
+                'inscrito_telefone' => $telefone,
+                'inscrito_celular' => $celular,
+                'inscrito_endereco' => $endereco,
+                'pk_post' => $post
+            )
+                )):
+            ?>
+            <div class="alert alert-success alert-dismissible show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>INSCRITO COM SUCESS</strong>
+            </div>
+        <?php else: ?>
+            <div class="alert alert-danger alert-dismissible show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>ERRO AO INSERIR, VERIFIQUE SEUS DADOS E TENTE NOVAMENTE</strong>
+            </div>
+        <?php endif;
+    } ?>
+
+<?php get_footer();

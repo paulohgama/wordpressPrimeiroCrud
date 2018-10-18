@@ -166,6 +166,17 @@ add_action( 'admin_menu', 'remove_menus' );
 
 add_action('save_post', 'atualizar');
 
+function remove_footer_admin () {
+    echo '';
+}
+ 
+function wpbeginner_remove_version() {
+    return '';
+}
+
+add_filter('the_generator', 'wpbeginner_remove_version');
+add_filter('admin_footer_text', 'remove_footer_admin');
+
 function registra_informacoes() {
 	add_meta_box(
 		'informacoes-treinamentos',
