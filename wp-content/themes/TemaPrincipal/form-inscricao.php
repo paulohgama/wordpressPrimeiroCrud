@@ -32,13 +32,13 @@ Template Name: Formulario de Inscrição
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="email">Email:</label>
                     <div class="col-sm-10">
-                        <input id="form-email" class="form-control" type="email" placeholder="email@exemplo.com.br" name="email">
+                        <input id="email" class="form-control" type="email" placeholder="email@exemplo.com.br" name="email">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="cep">CEP:</label>
                     <div class="col-sm-10">
-                        <input id="rg" class="form-control" type="text" placeholder="Insira seu cep aqui" name="cep">
+                        <input id="cep" class="form-control" type="text" placeholder="Insira seu cep aqui" name="cep">
                     </div>
 		</div>
                 <div class="form-group">
@@ -129,5 +129,79 @@ Template Name: Formulario de Inscrição
             </div>
         <?php endif;
     } ?>
+
+<script type="text/javascript" >
+
+        $(document).ready(function() {
+            function limpa_formulário_cep() {
+                $("#endereco").val("");
+                $("#bairro").val("");
+                $("#cidade").val("");
+                $("#estado").val("");
+            }
+            
+            $("#cep").blur(function() {
+                var cep = $(this).val().replace(/\D/g, '');
+                if (cep != "") {
+                    var validacep = /^[0-9]{8}$/;
+                    if(validacep.test(cep)) {
+                        $("#endereco").val("...");
+                        $("#bairro").val("...");
+                        $("#cidade").val("...");
+                        $("#estado").val("...");
+                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+                            if (!("erro" in dados)) {
+                                var estado = {
+                                    SP:"São Paulo",
+                                    RJ:"Rio de Janeiro",
+                                    RS:"Rio Grande do Sul",
+                                    PR:"Paraná",
+                                    PB:"Paraíba",
+                                    BA:"Bahia",
+                                    ES:"Espírito Santo",
+                                    MT:"Mato Grosso",
+                                    MS:"Mato Grosso do Sul",
+                                    MG:"Minas Gerais",
+                                    RO:"Rondônia",
+                                    AM:"Amazonas",
+                                    AP:"Amapá",
+                                    RR:"Roraima",
+                                    SC:"Santa Catarina",
+                                    SE:"Sergipe",
+                                    CE:"Ceará",
+                                    AL:"Alagoas",
+                                    AC:"Acre",
+                                    GO:"Goiás",
+                                    PA:"Pará",
+                                    PE:"Pernambuco",
+                                    RN:"Rio Grande do Norte",
+                                    MA:"Maranhão",
+                                    DF:"Distrito Federal",
+                                    PI:"Piauí",
+                                    TO:"Tocantins"
+                                };
+                                $("#endereco").val(dados.logradouro);
+                                $("#bairro").val(dados.bairro);
+                                $("#cidade").val(dados.localidade);
+                                $("#estado").val(estado[dados.uf]);
+                            }
+                            else {
+                                limpa_formulário_cep();
+                                alert("CEP não encontrado.");
+                            }
+                        });
+                    } 
+                    else {
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } 
+                else {
+                    limpa_formulário_cep();
+                }
+            });
+        });
+
+    </script>
 
 <?php get_footer();
