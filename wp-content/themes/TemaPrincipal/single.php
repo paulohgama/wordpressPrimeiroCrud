@@ -27,17 +27,17 @@
                 <dd>Vagas: <?= $curso_meta_data['vagas_id'][0] ?></dd>
                 <dd>Vagas restantes: <?= $curso_meta_data['vagasrestantes_id'][0] ?></dd>
             </dl>
-        </div>
+        </div>  
         <div class="col-sm-4">
             <span class="single-curso-data">
 		<?php the_date(); ?>
             </span>
         </div>
-        <div class="col-sm-offset-4 col-sm-4">
+        <div class="col-sm-offset-11 col-sm-1">
             <form method="POST" action="<?= get_site_url().'/formulario-de-inscricao/'?>">
                 <input type="hidden" name="post_id" value="<?=$post->ID?>"/>
                 <input type="hidden" name="preço" value="<?= $curso_meta_data['preco_id'][0] ?>"/>
-                <input type="submit" class="btn btn-success" value="Inscrição"/>
+                <input type="submit" class="btn btn-success" <?= (!$curso_meta_data['vagasrestantes_id'][0] > 0) ? 'disabled' : '' ?> value="Inscrição"/>
             </form>
         </div>
         <?php 
