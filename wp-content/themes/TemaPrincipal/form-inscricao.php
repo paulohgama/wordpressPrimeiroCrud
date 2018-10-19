@@ -10,71 +10,75 @@ Template Name: Formulario de Inscrição
     } get_header(); ?>
 
 <div class="container">
-    <form class="form-horizontal" action="" method="post">
+    <form class="form-horizontal" id="formInscricao" action="" method="post">
 		<div class="form-group">
                     <label class="label-control col-sm-2" for="nome">Nome:</label>
                     <div class="col-sm-10">
-                        <input id="nome" class="form-control" type="text" placeholder="Seu nome completo aqui" name="nome">
+                        <input id="nome" class="form-control" type="text" required placeholder="Seu nome completo aqui" name="nome">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="data">Data:</label>
                     <div class="col-sm-10">
-                        <input id="data" class="form-control" type="text" placeholder="Sua data de nascimento aqui" name="data">
+                        <input id="data" class="form-control" type="text" required placeholder="Sua data de nascimento aqui" name="data">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="cpf">CPF:</label>
                     <div class="col-sm-10">
-                        <input id="cpf" class="form-control" type="text" placeholder="Insira seu cpf aqui" name="cpf">
+                        <input id="cpf" class="form-control" type="text" required placeholder="Insira seu cpf aqui" name="cpf">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="email">Email:</label>
                     <div class="col-sm-10">
-                        <input id="email" class="form-control" type="email" placeholder="email@exemplo.com.br" name="email">
+                        <input id="email" class="form-control" type="email" required placeholder="email@exemplo.com.br" name="email">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="cep">CEP:</label>
                     <div class="col-sm-10">
-                        <input id="cep" class="form-control" type="text" placeholder="Insira seu cep aqui" name="cep">
+                        <input id="cep" class="form-control" type="text" required placeholder="Insira seu cep aqui" name="cep">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="endereco">Endereço:</label>
-                    <div class="col-sm-10">
-                        <input id="endereco" class="form-control" type="" placeholder="Seu endereço aqui" name="endereco">
+                    <div class="col-sm-6">
+                        <input id="endereco" class="form-control" type="text" disabled required placeholder="Seu endereço aqui" name="endereco">
+                    </div>
+                    <label class="label-control col-sm-1" for="numero">Numero:</label>
+                    <div class="col-sm-3">
+                        <input id="numero" class="form-control" type="text" required placeholder="Seu numero aqui" name="numero">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="bairro">Bairro:</label>
                     <div class="col-sm-10">
-                        <input id="bairro" class="form-control" type="text" placeholder="Seu bairro aqui" name="bairro">
+                        <input id="bairro" class="form-control" type="text" required placeholder="Seu bairro aqui" disabled name="bairro">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="cidade">Cidade:</label>
                     <div class="col-sm-10">
-                        <input id="cidade" class="form-control" type="text" placeholder="Sua cidade aqui" name="cidade">
+                        <input id="cidade" class="form-control" type="text" required placeholder="Sua cidade aqui" disabled name="cidade">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="estado">Estado:</label>
                     <div class="col-sm-10">
-                        <input id="estado" class="form-control" type="text" placeholder="Seu estado aqui" name="estado">
+                        <input id="estado" class="form-control" type="text" required placeholder="Seu estado aqui" disabled name="estado">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="telefone">Telefone:</label>   
                     <div class="col-sm-10">
-                        <input id="telefone" class="form-control" type="tel" placeholder="Seu telefone aqui" name="telefone">
+                        <input id="telefone" class="form-control" type="tel" required placeholder="Seu telefone aqui" name="telefone">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="celular">Celular:</label>   
                     <div class="col-sm-10">
-                        <input id="celular" class="form-control" type="text" placeholder="Seu celular aqui" name="celular">
+                        <input id="celular" class="form-control" type="text" required placeholder="Seu celular aqui" name="celular">
                     </div>
 		</div>
                 <input type="hidden" name="post_id" value="<?= $_POST['post_id']?>">
@@ -200,6 +204,62 @@ Template Name: Formulario de Inscrição
                     limpa_formulário_cep();
                 }
             });
+                    $('#formInscricao').validate({
+           rules: {
+               nome: {
+                   required: true,
+                   minlength: 5,
+                   maxlength: 100
+               },
+               email: {
+                   email: true,
+                   required: true,
+                   minlength: 10,
+                   maxlength: 100
+               },
+               date: {
+                   date: true,
+                   required: true
+               },
+               numero: {
+                   number: true,
+                   required: true
+               },
+               cpf: "required",
+               cep: "required",
+               telefone: "required",
+               celular: "required",
+               endereco: "required"
+           },
+           errorClass: "text-danger bg-danger",
+           messages: {
+               nome: {
+                   required: "Nome obrigatorio",
+                   minlength: "Tamanhho minimo de 5 caracteres",
+                   maxlength: "Tamanhho maximo de 100 caracteres"
+               },
+               email: {
+                   email: 'E-mail invalido',
+                   required: 'E-mail obrigatorio',
+                   minlength: 'Tamanhho minimo de 5 caracteres',
+                   maxlength: 'Tamanhho maximo de 100 caracteres'
+               },
+               data: {
+                   date: 'Data invalida',
+                   required: 'Data de nascimento obrigatoria'
+               },
+               numero: {
+                   number:'Numero em formato invalido',
+                   required: 'Numero da residencia obrigatoria'
+               },
+               cpf: 'CPF obrigatorio',
+               cep: 'CEP obrigatorio',
+               telefone: 'Telefone obrigatorio',
+               celular: 'Celular obrigatorio',
+               endereco: 'Endereço obrigatorio'
+           }      
+        });
+
         });
 
     </script>

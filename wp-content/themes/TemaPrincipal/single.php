@@ -1,4 +1,4 @@
-<?php $css_especifico = 'single';
+<?php 
     require_once('header.php');  ?>
         <?php 
             if (have_posts()){
@@ -6,7 +6,7 @@
                     the_post();
 	?>
 	<center>
-            <?php the_post_thumbnail(); ?>
+            <?php the_post_thumbnail('full'); ?>
             <h2><?php the_title(); ?></h2></center><br>
 	<div class="col-sm-10">
             <?php the_content(); ?>
