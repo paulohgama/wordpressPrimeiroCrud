@@ -51,12 +51,12 @@ function conteudo_treinamentos($post) {
 			justify-content: space-between;
 		}
 
-		.metabox-item {
+		.form-group {
 			flex-basis: 30%;
 
 		}
 
-		.metabox-item label {
+		.form-group label {
 			font-weight: 700;
 			display: block;
 			margin: .5rem 0;
@@ -83,7 +83,7 @@ function conteudo_treinamentos($post) {
 			color: #FFF;
 		}
 
-		.metabox-input {
+		.form-control {
 			height: 100%;
 			border: 1px solid #CCC;
 			border-left: none;
@@ -91,41 +91,45 @@ function conteudo_treinamentos($post) {
 		}
 
 	</style>
-	<div class="metabox">
-		<div class="metabox-item">
-			<label for="Gratuito-input">Gratuito</label>
-				<input id="Gratuito-input" class="metabox-input" type="checkbox" name="gratuito_id" onclick="Gratuito()" <?php 
-					if ($curso_meta_data['gratuito_id'][0]) {
-							echo 'Checked';
-					} ?>
-				>
-			</div>
-		</div>
-		<div class="metabox-item">
-			<label for="Preco-input">Preço:</label>
-			<div class="input-addon-wrapper">
-				<span class="input-addon">R$</span>
-				<input id="Preco-input" class="metabox-input" type="text" name="preco_id"
-				value="<?= number_format($curso_meta_data['preco_id'][0], 2, ',', '.'); ?>">
-			</div>
-		</div>
-		<?php if ($curso_meta_data['gratuito_id'][0]) { ?>
-			<script>$("#Preco-input").attr("disabled", true);</script>
-			<?php
-		} ?>
-		<div class="metabox-item">
-			<label for="Chamada-input">Chamada:</label>
-			<input id="Chamada-input" class="metabox-input" type="date" name="chamada_id"
-			value="<?= $curso_meta_data['chamada_id'][0]; ?>">
-		</div>
-
-		<div class="metabox-item">
-			<label for="Vagas-input">Vagas:</label>
-			<input id="Vagas-input" class="metabox-input" type="number" name="vagas_id"
-			value="<?= $curso_meta_data['vagas_id'][0]; ?>">
-			<input type="hidden" id="Vagas_Restantes-input" name="vagasrestantes_id" value="">
-		</div>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<div class="container">
+            <div class="row">
+		<label class="col-sm-2" for="Gratuito-input">Gratuito</label>
+                <label class="col-sm-2" for="Preco-input">Preço:</label>
+                <label class="col-sm-2" for="Chamada-input">Chamada:</label>
+                <label class="col-sm-2" for="Vagas-input">Vagas:</label>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <input id="Gratuito-sim" class="radio-inline" type="radio" name="gratuito_id" value="true"> Sim
+                    <input id="Gratuito-nao" class="radio-inline" type="radio" name="gratuito_id" value="false" checked> Não
+                </div>
+                <div class="col-sm-2">
+                    <input id="Preco-input" class="form-control" type="text" name="preco_id" value="<?= number_format($curso_meta_data['preco_id'][0], 2, ',', '.'); ?>">
+                </div>
+                <div class="col-sm-2">
+                    <input id="Chamada-input" class="form-control" type="text" name="chamada_id" value="<?= $curso_meta_data['chamada_id'][0]; ?>">
+                </div>
+                <div class="col-sm-2">
+                    <input id="Vagas-input" class="form-control" type="number" name="vagas_id" min="2" value="<?= $curso_meta_data['vagas_id'][0]; ?>">
+                    <input type="hidden" id="Vagas_Restantes-input" name="vagasrestantes_id" value="">
+                </div>
+            </div>
 	</div>
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $("#Gratuito-sim").on('change', function()
+            {
+                $("#Preco-input").attr('disabled', true);
+            });
+            $("#Gratuito-nao").on('change', function()
+            {
+                $("#Preco-input").attr('disabled', false);
+            });
+        });
+        </script>
 <?php
 
 }

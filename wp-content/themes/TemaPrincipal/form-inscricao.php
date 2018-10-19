@@ -10,7 +10,7 @@ Template Name: Formulario de Inscrição
     } get_header(); ?>
 
 <div class="container">
-    <form class="form-horizontal" id="formInscricao" action="" method="post">
+    <form class="form-horizontal" id="formInscricao" action="<?= (!$_POST['gratuito']) ? '/pagamento' : '' ?>" method="post">
 		<div class="form-group">
                     <label class="label-control col-sm-2" for="nome">Nome:</label>
                     <div class="col-sm-10">
@@ -83,7 +83,7 @@ Template Name: Formulario de Inscrição
 		</div>
                 <input type="hidden" name="post_id" value="<?= $_POST['post_id']?>">
                 <div class="col-sm-offset-2 col-sm-10" style="margin-left: 180px">
-                    <input class="btn btn-success" name="enviando" value="Enviar" type="submit"/>
+                    <input class="btn btn-success" name="enviando" value="<?= ($_POST['gratuito']) ? 'Enviar' : 'Enviar e Pagar'?>" type="submit"/>
                 </div>
 	</form>
 </div>
@@ -101,6 +101,14 @@ Template Name: Formulario de Inscrição
         $nome = $_POST['nome'];
         $endereco = $_POST['endereco'];
         $data = $_POST['data'];
+        if($_POST['gratuito'])
+        {
+            $status = 'Finalizado';
+        }
+        else
+        {
+            $status = 'Aguardando confirmação de pagamento';
+        }
         
         global $wpdb;
         $inscrito_table = $wpdb->prefix.'inscritos';
@@ -118,14 +126,12 @@ Template Name: Formulario de Inscrição
                 'inscrito_telefone' => $telefone,
                 'inscrito_celular' => $celular,
                 'inscrito_endereco' => $endereco,
+                'inscrito_status' => $status,
                 'pk_post' => $post
             )
                 )):
             ?>
-            <div class="alert alert-success alert-dismissible show">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>INSCRITO COM SUCESS</strong>
-            </div>
+            red
         <?php else: ?>
             <div class="alert alert-danger alert-dismissible show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>

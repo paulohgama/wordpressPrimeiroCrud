@@ -37,6 +37,7 @@
             <form method="POST" action="<?= get_site_url().'/formulario-de-inscricao/'?>">
                 <input type="hidden" name="post_id" value="<?=$post->ID?>"/>
                 <input type="hidden" name="preço" value="<?= $curso_meta_data['preco_id'][0] ?>"/>
+                <input type="hidden" name="gratuito" value="<?= $curso_meta_data['gratuito_id'][0] ?>"/>
                 <input type="submit" class="btn btn-success" <?= (!$curso_meta_data['vagasrestantes_id'][0] > 0) ? 'disabled' : '' ?> value="Inscrição"/>
             </form>
         </div>
