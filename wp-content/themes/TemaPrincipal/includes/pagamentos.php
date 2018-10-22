@@ -16,6 +16,5 @@ Template Name: Dados
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     $retorno = curl_exec($curl);
     curl_close($curl);
-    return var_dump($retorno);
     $xml = simplexml_load_string($retorno);
     echo json_encode($xml);
