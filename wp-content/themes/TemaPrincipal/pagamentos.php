@@ -96,14 +96,22 @@ $(document).ready(function(){
             cvv: $("#Verification").val(),
             expirationMonth: $("#Mes").val(),
             expirationYear: $("#Ano").val(),
-            success: function(){
+            success: function(data){
                 $("#NumeroCartao").addClass()();
                 $("#Verification").addClass();
                 $("#Mes").addClass();
                 $("#Ano").addClass();
+                $("#Token").val(data.card.token);
             }
         });
     }
+    
+    $("#comprar").on('click', function(event){
+        event.preventDefault();
+        PagSeguroDirectPayment.onSenderHashReady(function(response){
+            $("#Hash").val(response.senderHash);
+        });
+    });
 });
 </script>
 
@@ -112,7 +120,7 @@ $(document).ready(function(){
   <br>
   <!-- Nav tabs -->
   <ul class="nav nav-tabs">
-    <li class="nav-item">
+    <li class="nav-item active">
       <a class="nav-link" href="#credito">Credito</a>
     </li>
     <li class="nav-item">
@@ -125,18 +133,32 @@ $(document).ready(function(){
 
   <!-- Tab panes -->
   <div class="tab-content">
-      <div id="credito" style="border: 1px solid #000; border-radius: 10px" class="container tab-pane"><br>
+      <div id="credito" style="border: 1px solid #000; border-radius: 10px" class="container tab-pane active"><br>
       <h3>CREDITO</h3>
       <form action="">
-          <div class="form-group col-sm-5">
+          <div class="form-group col-sm-6">
               <input type="text" id="NumeroCartao" class="form-control" style="float:left; width: 90%" name="NumeroCartao" placeholder="Numero do cartão" value="" />
               <div id="imageBrand" style="float: right; width: 10%"></div>    
           </div>
-          <div class="form-group col-sm-5">
+          <div class="form-group col-sm-6">
               <select name="qntParcelas" class="form-control" id="qntParcelas">
                   <option value="">Selecione numero de parcelas</option>
               </select>
+          </div >
+          <div class="form-group col-sm-6">
+              <div class="form-group col-sm-2" style="width: 33%; margin-left: -15px">
+                <input name="verification" class="form-control" id="Verification" placeholder="Digito verificador"/>
+            </div>
+            <div class="form-group col-sm-2" style="width: 33.5%; margin-left: -10px">
+                <input name="mes" class="form-control" id="Mes" placeholder="Mes de vencimento"/>
+            </div>
+            <div class="form-group col-sm-2" style="width: 33%; margin-left: -10px">
+                <input name="ano" class="form-control" id="Ano" placeholder="Ano de vencimento"/>
+            </div>
           </div>
+          <input type="hidden" name="tokenCard" id="Token"/>
+          <input type="hidden" name="hashCard" id="Hash"/>
+          <a id="comprar" style="margin-left: 15px" class="btn btn-primary" role="button">Comprar</a>
       </form>
       <br>
     </div>
