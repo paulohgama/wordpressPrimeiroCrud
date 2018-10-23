@@ -10,7 +10,7 @@ Template Name: Formulario de Inscrição
     } get_header(); ?>
 
 <div class="container">
-    <form class="form-horizontal" id="formInscricao" action="<?= (!$_POST['gratuito']) ? '/pagamento' : '' ?>" method="post">
+    <form class="form-horizontal" id="formInscricao" action="<?= (!$_POST['gratuito']) ? get_site_url().'/pagamento' : '' ?>" method="post">
 		<div class="form-group">
                     <label class="label-control col-sm-2" for="nome">Nome:</label>
                     <div class="col-sm-10">

@@ -61,6 +61,7 @@ $(document).ready(function(){
                 success: function(data){
                     $("#imageBrand").html("<img src='https:/stc.pagseguro.uol.com.br/public/img/payment-methods-flags/68x30/"+data.brand.name+".png'>");
                     getParcelas(data.brand.name);
+                    $("#Bandeira").val(data.brand.name);
                 },
                 error: function(data)
                 {
@@ -68,6 +69,10 @@ $(document).ready(function(){
                     $("#imageBrand").empty();
                 }
             });
+        }
+        if(qnt < 6)
+        {
+            $("#imageBrand").empty();
         }
     });
     function getParcelas(Bandeira)
@@ -77,30 +82,32 @@ $(document).ready(function(){
             maxInstallmentNoInterest: 2,
             brand: Bandeira,
             success: function(data){
+                $('#qntParcelas').empty();
+                $('#qntParcelas').append("<option value=''>Selecione numero de parcelas</option>");
                 $.each(data.installments, function(i, obj){
                     $.each(obj, function(j, objto){
                         var NumberValue = objto.installmentAmount;
                         var Number = "R$" + NumberValue.toFixed(2).replace(".", ",");
-                        $('#qntParcelas').append("<option value='"+objto.installmentAmount+"'>"+objto.quantity+"X de "+Number+"</option>");
+                        var NumberParcelas= NumberValue.toFixed(2);
+                        $('#qntParcelas').show().append("<option value='"+objto.quantity+"' label='"+NumberParcelas+"'>"+objto.quantity+" parcelas de "+Number+"</option>");
                     });
                 });
             }
         });
     }
-    var TokenCredito;
     function getTokenCredit(Bandeira)
     {
         PagSeguroDirectPayment.createCardToken({
-            cardNumber: $("#NumeroCartao").val(),
+            cardNumber: '4111111111111111',
             brand: Bandeira,
             cvv: $("#Verification").val(),
             expirationMonth: $("#Mes").val(),
             expirationYear: $("#Ano").val(),
             success: function(data){
-                $("#NumeroCartao").addClass()();
-                $("#Verification").addClass();
-                $("#Mes").addClass();
-                $("#Ano").addClass();
+                $("#NumeroCartao").addClass('.is-valid');
+                $("#Verification").addClass('.is-valid');
+                $("#Mes").addClass('.is-valid');
+                $("#Ano").addClass('.is-valid');
                 $("#Token").val(data.card.token);
             }
         });
@@ -109,8 +116,19 @@ $(document).ready(function(){
     $("#comprar").on('click', function(event){
         event.preventDefault();
         PagSeguroDirectPayment.onSenderHashReady(function(response){
+            getTokenCredit($("Bandeira").val());
             $("#Hash").val(response.senderHash);
+            if($("#Token").val() !== '' && $("#Hash").val() !== '')
+            {
+                $("#Pagamento").submit();
+            }
+            alert("Token e Hash necessario");
         });
+    });
+    
+    $("#qntParcelas").on('change',function(){
+        var ValueSelected=document.getElementById('qntParcelas');
+        $("#ValorParcelas").val(ValueSelected.options[ValueSelected.selectedIndex].label);
     });
 });
 </script>
@@ -135,7 +153,7 @@ $(document).ready(function(){
   <div class="tab-content">
       <div id="credito" style="border: 1px solid #000; border-radius: 10px" class="container tab-pane active"><br>
       <h3>CREDITO</h3>
-      <form action="">
+      <form action="<?= get_site_url().'/comprar' ?>" id="Pagamento" method="POST">
           <div class="form-group col-sm-6">
               <input type="text" id="NumeroCartao" class="form-control" style="float:left; width: 90%" name="NumeroCartao" placeholder="Numero do cartão" value="" />
               <div id="imageBrand" style="float: right; width: 10%"></div>    
@@ -158,6 +176,8 @@ $(document).ready(function(){
           </div>
           <input type="hidden" name="tokenCard" id="Token"/>
           <input type="hidden" name="hashCard" id="Hash"/>
+          <input type="hidden" name="bandeira" id="Bandeira"/>
+          <input type="hidden" name="ValorParcelas" id="ValorParcelas"/>
           <a id="comprar" style="margin-left: 15px" class="btn btn-primary" role="button">Comprar</a>
       </form>
       <br>
