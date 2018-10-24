@@ -32,15 +32,6 @@ function conteudo_treinamentos($post) {
 	$curso_meta_data = get_post_meta($post->ID);
 	?>
 	<script>
-		function Gratuito(){
-			if ($('#Gratuito-input').attr('Checked')) {
-				$('#Preco-input').attr('disabled',true);
-				$('#Preco-input').attr('value','0,00');
-			}
-			else{
-				$('#Preco-input').attr('disabled',false);	
-			}
-		}
 		$('#Vagas-input').on('keyup', function(){
 			$('#Vagas_Restantes-input').attr('value', $('#Vagas-input').attr('value'));
 		});
@@ -103,8 +94,8 @@ function conteudo_treinamentos($post) {
             </div>
             <div class="row">
                 <div class="col-sm-2">
-                    <input id="Gratuito-sim" class="radio-inline" type="radio" name="gratuito_id" value="true"> Sim
-                    <input id="Gratuito-nao" class="radio-inline" type="radio" name="gratuito_id" value="false" checked> Não
+                    <input id="Gratuito-sim" class="radio-inline" type="radio" name="gratuito_id" value="1" <?= ($curso_meta_data['gratuito_id']) ? 'checked' : ''?>> Sim
+                    <input id="Gratuito-nao" class="radio-inline" type="radio" name="gratuito_id" value="0" <?=($curso_meta_data['gratuito_id']) ? 'checked' : ''?>> Não
                 </div>
                 <div class="col-sm-2">
                     <input id="Preco-input" class="form-control" type="text" name="preco_id" value="<?= number_format($curso_meta_data['preco_id'][0], 2, ',', '.'); ?>">
@@ -135,9 +126,9 @@ function conteudo_treinamentos($post) {
 }
 
 function atualizar($post_id){
-	$checked = $_POST['gratuito_id'] ? true : false;
+	$checked = $_POST['gratuito_id'];
 	update_post_meta( $post_id, 'gratuito_id', $checked );
-	if ($checked == true) {
+	if ($checked == 1) {
 		?>
 			<script>$('#Preco-input').attr('disabled',true);</script>
 		<?php

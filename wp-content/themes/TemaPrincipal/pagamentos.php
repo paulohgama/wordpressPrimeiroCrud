@@ -5,15 +5,14 @@ Template Name: PagSeguro
 get_header();
 ?>
 <?php
-
-
-
-?>
+if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
 <script type="text/javascript">
 
 $(document).ready(function(){
+    $("#comprar").hide();
     var Root = "<?= get_site_url().'/dados' ?>";
-    var Amount = <?= 500.00 ?>; //post dps
+    var Amount = <?= $_POST['preco'] ?>;
+    $("#preco").val(Amount);
     $.ajax({
            url: Root,
            type: 'POST',
@@ -109,26 +108,46 @@ $(document).ready(function(){
                 $("#Mes").addClass('.is-valid');
                 $("#Ano").addClass('.is-valid');
                 $("#Token").val(data.card.token);
+                if($("#Token").val() !== '')
+                {
+                    $("#comprar").show();
+                }
             }
         });
     }
+    $("#Verification").blur(function (){
+        getTokenCredit($("Bandeira").val());
+    });
+    $("#Mes").blur(function (){
+        getTokenCredit($("Bandeira").val());
+    });
+    $("#Ano").blur(function (){
+        getTokenCredit($("Bandeira").val());
+    });
+    $("#NumeroCartao").blur(function (){
+        getTokenCredit($("Bandeira").val());
+    });
     
     $("#comprar").on('click', function(event){
         event.preventDefault();
         PagSeguroDirectPayment.onSenderHashReady(function(response){
-            getTokenCredit($("Bandeira").val());
             $("#Hash").val(response.senderHash);
             if($("#Token").val() !== '' && $("#Hash").val() !== '')
             {
                 $("#Pagamento").submit();
             }
-            alert("Token e Hash necessario");
         });
     });
     
     $("#qntParcelas").on('change',function(){
         var ValueSelected=document.getElementById('qntParcelas');
         $("#ValorParcelas").val(ValueSelected.options[ValueSelected.selectedIndex].label);
+    });
+    $.getJSON("https://viacep.com.br/ws/"+ <?= $_POST['cep'] ?> +"/json/?callback=?", function(dados) {
+        $("#endereco").val(dados.logradouro);
+        $("#bairro").val(dados.bairro);
+        $("#cidade").val(dados.localidade);
+        $("#estado").val(dados.uf);
     });
 });
 </script>
@@ -155,7 +174,7 @@ $(document).ready(function(){
       <h3>CREDITO</h3>
       <form action="<?= get_site_url().'/comprar' ?>" id="Pagamento" method="POST">
           <div class="form-group col-sm-6">
-              <input type="text" id="NumeroCartao" class="form-control" style="float:left; width: 90%" name="NumeroCartao" placeholder="Numero do cartão" value="" />
+              <input type="text" id="NumeroCartao" class="form-control" maxlength="16" style="float:left; width: 90%" name="NumeroCartao" placeholder="Numero do cartão" value="" />
               <div id="imageBrand" style="float: right; width: 10%"></div>    
           </div>
           <div class="form-group col-sm-6">
@@ -178,7 +197,22 @@ $(document).ready(function(){
           <input type="hidden" name="hashCard" id="Hash"/>
           <input type="hidden" name="bandeira" id="Bandeira"/>
           <input type="hidden" name="ValorParcelas" id="ValorParcelas"/>
-          <a id="comprar" style="margin-left: 15px" class="btn btn-primary" role="button">Comprar</a>
+          <input type="hidden" name="nome" id="nome" value="<?= $_POST['nome'] ?>"/>
+          <input type="hidden" name="data" id="data" value="<?= $_POST['data'] ?>"/>
+          <input type="hidden" name="cpf" id="cpf" value="<?= $_POST['cpf'] ?>"/>
+          <input type="hidden" name="email" id="email" value="<?= $_POST['email'] ?>"/>
+          <input type="hidden" name="cep" id="cep" value="<?= $_POST['cep'] ?>"/>
+          <input type="hidden" name="endereco" id="endereco" value="<?= $_POST['endereco'] ?>"/>
+          <input type="hidden" name="numero" id="numero" value="<?= $_POST['numero'] ?>"/>
+          <input type="hidden" name="bairro" id="bairro" value="<?= $_POST['bairro'] ?>"/>
+          <input type="hidden" name="estado" id="estado" value="<?= $_POST['estado'] ?>"/>
+          <input type="hidden" name="cidade" id="cidade" value="<?= $_POST['cidade'] ?>"/>
+          <input type="hidden" name="telefone" id="telefone" value="<?= $_POST['telefone'] ?>"/>
+          <input type="hidden" name="celular" id="celular" value="<?= $_POST['celular'] ?>"/>
+          <input type="hidden" name="titulo" id="titulo" value="<?= $_POST['titulo'] ?>"/>
+          <input type="hidden" name="preco" id="preco" value="<?= $_POST['preco'] ?>"/>
+          <input type="hidden" name="post_id" id="post_id" value="<?= $_POST['post_id'] ?>"/>
+          <input id="comprar" name="comprando" style="margin-left: 15px" class="btn btn-primary" role="button" value="Comprar"/>
       </form>
       <br>
     </div>
@@ -192,4 +226,5 @@ $(document).ready(function(){
     </div>
   </div>
 </div>
-<?phpget_footer();
+
+<?php } else { ?> <h1 style="text-align: center; margin-top: 300px">ESCOLHA UM CURSO PRIMEIRO</h1> <?php } get_footer();
