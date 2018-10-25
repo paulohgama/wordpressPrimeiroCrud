@@ -3,6 +3,19 @@ add_theme_support('post-thumbnails');
 function my_function_admin_bar(){
     return false;
 }
+add_action('admin_menu', 'menuListagem');
+
+function menuListagem()
+{
+    add_menu_page(
+            'Listagem Inscritos', 
+            'Listagem Inscritos', 
+            'manage_options', 
+            'listagem_menu_slug', 
+            'listagem_callback',
+            'dashicons-admin-users',26);
+}
+
 add_filter( 'show_admin_bar' , 'my_function_admin_bar');
 function cadastro_Cursos(){
 	$singular = 'Treinamento';
@@ -188,3 +201,6 @@ function menu(){
 	register_nav_menu('header-menu','main-menu');	
 }
 add_action('init', 'menu');
+
+include 'listagem.php';
+
