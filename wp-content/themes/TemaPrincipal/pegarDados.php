@@ -1,38 +1,28 @@
 <?php
+/*
+Template Name: PegarDados
+*/
+?>
+<?php
 
-        $pegadados = $this->CriarDataTable();
+        $pegadados = CriarDataTable();
         $dados = array();
         foreach ($pegadados as $row) {
-             $sub_dados = array();
-             $sub_dados[] = $row->carrer_id;
-             $sub_dados[] = $row->carrer_name;
-             $sub_dados[] = $row->profession_name;
-             $sub_dados[] = ($row->carrer_active) ? 'Ativa' : 'Inativa';
-
-             $sub_dados[] = ($row->carrer_active) ? 
-            
-             "<form method='POST' action='".route('ativarcarrer', $row->carrer_id)."'>".
-                 method_field('PATCH').
-                 @csrf_field().
-             "<button type='submit' role='button' class='btn btn-warning' data-toggle='tooltip' title='Inativar Item'><i class='fa fa-times'></i></button> </span></button> </form>" : 
- 
-             "<form method='POST' action='".route('ativarcarrer', $row->carrer_id)."'>".
-                 method_field('PATCH').
-                 @csrf_field()."<button type='submit' role='button' class='btn btn-success' data-toggle='tooltip' title='Ativar Item'><i class='fa fa-check'></i></button> </button></form>";
-             
-
-             $sub_dados[] = "<a href='".route('carrer.edit', $row->carrer_id)."' role='button' class='btn btn-primary' data-toggle='tooltip' title='Alterar'><span class='glyphicon glyphicon-edit'></span></a>";
-             $sub_dados[] = "<form method='POST' action='".route('carrer.destroy', $row->carrer_id)."'>".
-                            method_field('DELETE').
-                            csrf_field().
-                            "<button type='submit' role='button' class='btn btn-danger' data-toggle='tooltip' title='Deletar Item'><span class='glyphicon glyphicon-trash'></span></button></form>";
+            $sub_dados = array();
+            $sub_dados[] = $row['post_title'];
+            $sub_dados[] = $row['inscrito_data'];
+            $sub_dados[] = $row['inscrito_nome'];
+            $sub_dados[] = $row['inscrito_email'];
+            $sub_dados[] = $row['inscrito_status'];
+            $sub_dados[] = "<a href='' role='button' class='btn btn-primary' data-toggle='tooltip' title='Alterar'><span class='glyphicon glyphicon-edit'></span></a>";
+            $sub_dados[] = "<form method='POST' action=''>".""."<button type='submit' role='button' class='btn btn-danger' data-toggle='tooltip' title='Deletar Item'><span class='glyphicon glyphicon-trash'></span></button></form>";
             $dados[] = $sub_dados;
         }
         
         $output = array (
             "draw"  => intval($_POST['draw']),
-            "recordsTotal" => $this->TodosRegistros(), 
-            "recordsFiltered" => $this->RegistrosFiltrados(),
+            "recordsTotal" => TodosRegistros(), 
+            "recordsFiltered" => RegistrosFiltrados(),
             "data" => $dados
         );
         echo json_encode($output);
@@ -41,18 +31,18 @@
     
     function CriarQuery()
     {
-        $query = "select * from wp_inscritos inner join wp_posts on post_id = fk_post";
-        if($_POST['search']['value'] != null)
+        $query = "select * from wp_inscritos inner join wp_posts on ID = pk_post";
+        if(isset($_POST['search']['value']) && !empty($_POST['search']['value']))
         {
-            $query += "where inscritos_status like ".$_POST['search']['value']."%";         
+            $query = $query." where inscritos_status like ".$_POST['search']['value']."%";         
         }
-        if($request->order!= null)
+        if(isset($_POST['order']) && !empty($_POST['order']))
         {
-            $query += " order by ".$_POST['order']['0']['column']." ".$_POST['order']['0']['dir'];
+            $query = $query." order by ".$_POST['order']['0']['column']." ".$_POST['order']['0']['dir'];
         }
         else
         {
-            $query += " order by inscrito_id desc";
+            $query = $query." order by inscrito_id desc";
         }
         return $query;
     }
@@ -64,7 +54,7 @@
         $formato = "ARRAY_A";
         if($_POST['length'] != -1)
         {
-            $query += " limit ".$_POST['length']." offset ".$_POST['start'];
+            $query = $query." limit ".$_POST['length']." offset ".$_POST['start'];
         }
         $queryFinal = $wpdb->get_results($query, $formato);
         return $queryFinal;
@@ -75,15 +65,15 @@
         global $wpdb;
         $query = CriarQuery();
         $formato = "ARRAY_A";
-        $queryFinal = $wpdb->get_results($query, $formato);
-        return $queryFinal->num_rows;
+        $wpdb->get_results($query, $formato);
+        return $wpdb->num_rows;
     }
     
     function TodosRegistros()
     {   
         global $wpdb;
-        $query = "select * from wp_inscritos inner join wp_posts on post_id = fk_post";
+        $query = "select * from wp_inscritos inner join wp_posts on id = pk_post";
         $formato = "ARRAY_A";
-        $queryFinal = $wpdb->get_results($query, $formato);
-        return $queryFinal->num_rows;
+        $wpdb->get_results($query, $formato);
+        return $wpdb->num_rows;
     }
