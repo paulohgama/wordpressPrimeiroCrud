@@ -134,6 +134,8 @@ if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
     'inscrito_data' => date('Y-m-d'),
     'pk_post' => $post))) 
     {
+      $metaValue = $wpdb->get_var("select meta_value from wp_post_meta where meta_key = 'vagasrestantes_id' and post_id = ".$post.";");
+      $wpdb->update('wp_post_meta', array('meta_value' => (intval($meta_value)-1) ), array('post_id' => $post , 'meta_key' => 'vagasrestantes_id'));
       $to = $email;
       $subject = 'Cadastro efetuado com sucesso';
       $body = 'Inscrição Confirmada com sucesso!';
