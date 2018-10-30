@@ -10,12 +10,12 @@ Template Name: PegarDados
         foreach ($pegadados as $row) {
             $sub_dados = array();
             $sub_dados[] = $row['post_title'];
-            $sub_dados[] = $row['inscrito_data'];
+            $sub_dados[] = (substr($row['inscrito_data'], 8, 2)."/".substr($row['inscrito_data'], 5, 2)."/".substr($row['inscrito_data'], 0, 4));
             $sub_dados[] = $row['inscrito_nome'];
             $sub_dados[] = $row['inscrito_email'];
             $sub_dados[] = $row['inscrito_status'];
-            $sub_dados[] = "<a href='' role='button' class='btn btn-primary' data-toggle='tooltip' title='Alterar'><span class='glyphicon glyphicon-edit'></span></a>";
-            $sub_dados[] = "<form method='POST' action=''>".""."<button type='submit' role='button' class='btn btn-danger' data-toggle='tooltip' title='Deletar Item'><span class='glyphicon glyphicon-trash'></span></button></form>";
+            $sub_dados[] = "<form method='POST' action=''><input type='hidden' name='inscrito_id' value='".$row['inscrito_id']."'/><button type='submit' role='button' class='btn btn-success' name='visualizar' value='visualizando' data-toggle='tooltip' title='Visualizar'><span class='glyphicon glyphicon-eye-open'></span></button></form>";
+            $sub_dados[] = "<form method='POST' action=''><input type='hidden' name='inscrito_id' value='".$row['inscrito_id']."'/><button type='submit' role='button' class='btn btn-danger' data-toggle='tooltip' title='Deletar Item' value='deletando' name='deletar'><span class='glyphicon glyphicon-trash'></span></button></form>";
             $dados[] = $sub_dados;
         }
         
@@ -27,14 +27,14 @@ Template Name: PegarDados
         );
         echo json_encode($output);
         
-    $order = ['carrer_id','carrer_name', 'carrer_active','profession_name', null, null ];
+    $order = array('post_title','inscrito_data', 'inscrito_nome','inscrito_email', 'inscrito_status' , null, null );
     
     function CriarQuery()
     {
         $query = "select * from wp_inscritos inner join wp_posts on ID = pk_post";
-        if(isset($_POST['search']['value']) && !empty($_POST['search']['value']))
+        if(isset($_POST['post']) && intval($_POST['post']) > 0)
         {
-            $query = $query." where inscritos_status like ".$_POST['search']['value']."%";         
+            $query = $query." where pk_post = ".$_POST['post']; 
         }
         if(isset($_POST['order']) && !empty($_POST['order']))
         {

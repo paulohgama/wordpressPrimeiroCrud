@@ -197,6 +197,34 @@ function registra_informacoes() {
 }
 add_action('add_meta_boxes', 'registra_informacoes');
 
+function add_inscrito_columns($columns) {
+    return array_merge($columns, 
+              array('inscritos' => __('Inscritos')));
+}
+add_filter('manage_posts_columns' , 'add_inscrito_columns');
+
+function add_inscrito_custom_columns($column, $post_id) { 
+	if ('inscritos' == $column) { 
+		echo "<a href='".get_site_url()."/wp-admin/admin.php?page=listagem_menu_slug&post_id=".$post_id."'>Ver inscritos do curso</a>"; 
+	}
+} 
+
+add_action('manage_posts_custom_column', 'add_inscrito_custom_columns', 10, 2);
+
+add_action( 'phpmailer_init', 'my_phpmailer_example' );
+function my_phpmailer_example( $phpmailer ) {
+    $phpmailer->isSMTP();     
+    $phpmailer->Host = 'smtplw.com.br';
+    $phpmailer->SMTPAuth = true;
+    $phpmailer->Port = 587;
+    $phpmailer->Username = 'kbrtec12';
+    $phpmailer->Password = 'E4HsryASrHtW5M';
+
+    // Additional settings…
+    $phpmailer->SMTPSecure = "tls"; // Choose SSL or TLS, if necessary for your server
+    $phpmailer->From = "smtp@kbrtec.com.br";
+    $phpmailer->FromName = "Paulo Henrique";
+}
 function menu(){
 	register_nav_menu('header-menu','main-menu');	
 }

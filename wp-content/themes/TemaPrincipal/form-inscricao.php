@@ -5,6 +5,21 @@ Template Name: Formulario de Inscrição
 ?>
 <?php get_header();
 if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $("#data").datepicker({
+            altFormat: 'dd/mm/yy',
+            dataFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+            dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+        });
+    });
+  </script>
 <div class="container">
     <form class="form-horizontal" id="formInscricao" action="<?= (!$_POST['gratuito'] || empty($_POST['gratuito'])) ? get_site_url().'/pagamento' : '' ?>" method="post">
 		<div class="form-group">
@@ -40,7 +55,7 @@ if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="endereco">Endereço:</label>
                     <div class="col-sm-6">
-                        <input id="endereco" class="form-control" type="text" disabled required placeholder="Seu endereço aqui" name="endereco">
+                        <input id="endereco" class="form-control" type="text" required placeholder="Seu endereço aqui" name="endereco">
                     </div>
                     <label class="label-control col-sm-1" for="numero">Numero:</label>
                     <div class="col-sm-3">
@@ -50,19 +65,19 @@ if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="bairro">Bairro:</label>
                     <div class="col-sm-10">
-                        <input id="bairro" class="form-control" type="text" required placeholder="Seu bairro aqui" disabled name="bairro">
+                        <input id="bairro" class="form-control" type="text" required placeholder="Seu bairro aqui" name="bairro">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="cidade">Cidade:</label>
                     <div class="col-sm-10">
-                        <input id="cidade" class="form-control" type="text" required placeholder="Sua cidade aqui" disabled name="cidade">
+                        <input id="cidade" class="form-control" type="text" required placeholder="Sua cidade aqui" name="cidade">
                     </div>
 		</div>
                 <div class="form-group">
                     <label class="label-control col-sm-2" for="estado">Estado:</label>
                     <div class="col-sm-10">
-                        <input id="estado" class="form-control" type="text" required placeholder="Seu estado aqui" disabled name="estado">
+                        <input id="estado" class="form-control" type="text" required placeholder="Seu estado aqui" name="estado">
                     </div>
 		</div>
                 <div class="form-group">
@@ -86,7 +101,58 @@ if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
 	</form>
 </div>
 
-<?php include 'includes/cadastro.php'; ?>
+<?php  if(isset($_POST['enviando'])){
+    $celular = $_POST['celular'];
+    $telefone = $_POST['telefone'];
+    $estado = $_POST['estado'];
+    $cidade = $_POST['cidade'];
+    $bairro = $_POST['bairro'];
+    $cep = $_POST['cep'];
+    $cpf = $_POST['cpf'];
+    $email = $_POST['email'];
+    $post = $_POST['post_id'];
+    $nome = $_POST['nome'];
+    $endereco = $_POST['endereco']." ".$_POST['numero'] ;
+    $data = date('Y-m-d', $_POST['data']);
+    $status = 'Finalizado';
+
+    global $wpdb;
+    $inscrito_table = $wpdb->prefix.'inscritos';
+    if($wpdb->insert($inscrito_table, array(
+    'inscrito_nome' => $nome,
+    'inscrito_nascimento' => $data,
+    'inscrito_cpf' => $cpf,
+    'inscrito_cep' => $cep,
+    'inscrito_email' => $email,
+    'inscrito_cidade' => $cidade,
+    'inscrito_bairro' => $bairro,
+    'inscrito_estado' => $estado,
+    'inscrito_telefone' => $telefone,
+    'inscrito_celular' => $celular,
+    'inscrito_endereco' => $endereco,
+    'inscrito_status' => $status,
+    'inscrito_data' => date('Y-m-d'),
+    'pk_post' => $post))) 
+    {
+      $to = $email;
+      $subject = 'Cadastro efetuado com sucesso';
+      $body = 'Inscrição Confirmada com sucesso!';
+      $headers = array('Content-Type: text/html; charset=UTF-8');
+       
+      wp_mail( $to, $subject, $body, $headers );
+      ?>
+        <div class="alert alert-success alert-dismissible show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Inscrição efetuada com sucesso</strong>
+        </div>
+    <?php } else 
+    {?>
+        <div class="alert alert-danger alert-dismissible show">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong>Erro ao cadastrar</strong>
+        </div>
+    <?php }}
+?>
 
 <script type="text/javascript" >
 

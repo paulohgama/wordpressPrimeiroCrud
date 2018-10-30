@@ -21,7 +21,7 @@ $email = $_POST['email'];
 $post = $_POST['post_id'];
 $nome = $_POST['nome'];
 $endereco = $_POST['endereco'];
-$data = $_POST['data'];
+$data = date('Y-m-d', $_POST['data']);
 $titulo = $_POST['titulo'];
 $numero = $_POST['numero'];
 $QtdParcelas=filter_input(INPUT_POST,'qntParcelas',FILTER_SANITIZE_SPECIAL_CHARS);
@@ -38,8 +38,8 @@ $Data["itemId1"] = $post;
 $Data["itemDescription1"] = $titulo;
 $Data["itemAmount1"] = $preco;
 $Data["itemQuantity1"] = 1;
-$Data["notificationURL="]="https://www.meusite.com.br/notificacao.php";
-$Data["reference"]="83783783737";
+$Data["notificationURL="]="http://ambiente-dev5.provisorio.ws/Paulo/Wordpress/notificacao/";
+$Data["reference"]=$cpf;
 $Data["senderName"]= 'Paulo Henrique';
 $Data["senderCPF"]='47629364806';
 $Data["senderAreaCode"]= '13';
@@ -86,7 +86,7 @@ if(isset($_POST['comprando'])){
     $post = $_POST['post_id'];
     $nome = $_POST['nome'];
     $endereco = $_POST['endereco']." ".$_POST['numero'] ;
-    $data = $_POST['data'];
+    $data = date('Y-m-d', $_POST['data']);
     $status = 'Aguardando confirmação de pagamento';
 
     global $wpdb;
@@ -104,6 +104,7 @@ if(isset($_POST['comprando'])){
                                             'inscrito_celular' => $celular,
                                             'inscrito_endereco' => $endereco,
                                             'inscrito_status' => $status,
+                                            'inscrito_data' => date('Y-m-d'),
                                             'pk_post' => $post))) 
     {?>
         <div class="alert alert-success alert-dismissible show">
@@ -122,12 +123,19 @@ if(isset($_POST['comprando'])){
         $Retorno=curl_exec($Curl);
         curl_close($Curl);
         $Xml=simplexml_load_string($Retorno);
-        if(!(substr($Xml, 1, 6) == "errors")) {?>
+        if(!(substr($Xml, 1, 6) == "error")) {?>
             <div class="alert alert-success alert-dismissible show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Transação efetuada, aguarde confirmação de pagamento</strong>
             </div>
-        <?php } else { ?>
+        <?php
+        	      $to = $email;
+			      $subject = 'Cadastro efetuado com sucesso';
+			      $body = 'Inscrição Recebida, Aguardando pagamento';
+			      $headers = array('Content-Type: text/html; charset=UTF-8');
+       
+      			wp_mail( $to, $subject, $body, $headers );
+         } else { ?>
             <div class="alert alert-danger alert-dismissible show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>ERRO NA TRANSSAÇÃO POR FAVOR ENTRE EM CONTATO</strong>
@@ -143,7 +151,7 @@ if(isset($_POST['comprando'])){
     {?>
         <div class="alert alert-danger alert-dismissible show">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Nem entrou</strong>
+                <strong>Erro ao cadastrar</strong>
         </div>
     <?php }
     get_footer();
