@@ -39,7 +39,7 @@
                 <input type="hidden" name="preco" value="<?= $curso_meta_data['preco_id'][0] ?>"/>
                 <input type="hidden" name="gratuito" value="<?= $curso_meta_data['gratuito_id'][0] ?>"/>
                 <input type="hidden" name="titulo" value="<?= the_title() ?>"/>
-                <input type="submit" class="btn btn-success" <?= (!$curso_meta_data['vagasrestantes_id'][0] > 0) ? 'disabled' : '' ?> value="Inscrição"/>
+                <input type="submit" class="btn btn-success" <?= (!($curso_meta_data['vagasrestantes_id'][0] > 0)) ? 'disabled' : '' ?> value="Inscrição"/>
             </form>
         </div>
         <?php 

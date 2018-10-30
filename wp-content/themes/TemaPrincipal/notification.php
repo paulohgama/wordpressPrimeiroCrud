@@ -47,8 +47,8 @@ if(true){
 				array( 'inscrito_cpf' => $transaction->reference )
 			);
 			$id = $wpdb->get_var('select pk_post from wp_inscritos inner join wp_posts on ID = pk_post where inscrito_cpf = '.$transaction->reference.';');
-			$metaValue = $wpdb->get_var("select meta_value from wp_post_meta where meta_key = 'vagasrestantes_id' and post_id = ".$id.";");
-			$wpdb->update('wp_post_meta', array('meta_value' => (intval($meta_value)-1) ), array('post_id' => $id , 'meta_key' => 'vagasrestantes_id'));
+			$metaValue = $wpdb->get_var("select meta_value from wp_postmeta where meta_key = 'vagasrestantes_id' and post_id = ".$id.";");
+			$wpdb->update('wp_postmeta', array('meta_value' => (intval($meta_value)-1) ), array('post_id' => $id , 'meta_key' => 'vagasrestantes_id'));
 			$stat = 'Inscrição Confirmada com Sucesso';
 			break;
 		case 4:
