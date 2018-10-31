@@ -96,7 +96,7 @@ if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
                 <input type="hidden" name="preco" value="<?= (double) str_replace(',', '.', $_POST['preco'])?>">
                 <input type="hidden" name="titulo" value="<?= $_POST['titulo']?>">
                 <div class="col-sm-offset-2 col-sm-10" style="margin-left: 180px">
-                    <input class="btn btn-success" name="enviando" value="<?= ($_POST['gratuito'] || !empty($_POST['gratuito'])) ? 'Enviar' : 'Enviar e Pagar'?>" type="submit"/>
+                    <input class="btn btn-success" name="enviando" value="<?= ($_POST['gratuito']) ? 'Enviar' : 'Enviar e Pagar'?>" type="submit"/>
                 </div>
 	</form>
 </div>
@@ -134,14 +134,14 @@ if(isset($_POST['post_id']) || !empty($_POST['post_id'])) {?>
     'inscrito_data' => date('Y-m-d'),
     'pk_post' => $post))) 
     {
-
-      $wpdb->update('wp_postmeta', array('meta_value' => (intval($meta_value)-1) ), array('post_id' => $post , 'meta_key' => 'vagasrestantes_id'));
-      $to = $email;
-      $subject = 'Cadastro efetuado com sucesso';
-      $body = 'Inscrição Confirmada com sucesso!';
-      $headers = array('Content-Type: text/html; charset=UTF-8');
+   		$metaValue--;
+      	$wpdb->update('wp_postmeta', array('meta_value' => $metaValue ), array('post_id' => $post , 'meta_key' => 'vagasrestantes_id'));
+      	$to = $email;
+      	$subject = 'Cadastro efetuado com sucesso';
+      	$body = 'Inscrição Confirmada com sucesso!';
+      	$headers = array('Content-Type: text/html; charset=UTF-8');
        
-      wp_mail( $to, $subject, $body, $headers );
+      	wp_mail( $to, $subject, $body, $headers );
       ?>
         <div class="alert alert-success alert-dismissible show">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
